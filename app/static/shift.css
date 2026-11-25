@@ -1,0 +1,64 @@
+.p0840 .nav-link {
+  display: block; padding: .55em .7em; color: var(--ink); text-decoration: none;
+  border-left: 3px solid transparent;
+}
+.p0840 .nav-link.active { background: var(--soft); border-left-color: var(--accent); }
+
+.p0840 #panel-jobs { grid-column: span 2; }
+.p0840 #panel-form { grid-column: span 1; }
+.p0840 #panel-plan { grid-column: span 2; }
+.p0840 #panel-deferred { grid-column: span 1; }
+.p0840 #panel-review { grid-column: span 3; }
+
+.p0840 .shift-table td small, .p0840 .shift-table td span.badge { color: var(--muted); font-size: 11px; }
+.p0840 .shift-table tr.job-REVOKED, .p0840 .shift-table tr.job-INCOMPLETE { opacity: .68; }
+.p0840 .shift-table td.num { font-family: var(--font-num); text-align: right; }
+
+.p0840 .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.p0840 .grid-form label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); }
+.p0840 .grid-form input, .p0840 .grid-form select { width: 100%; }
+.p0840 .form-actions { grid-column: span 2; display: flex; gap: 8px; justify-content: flex-end; }
+
+.p0840 .gantt { display: grid; gap: 8px; padding-top: 4px; }
+.p0840 .track { display: grid; grid-template-columns: 84px 1fr; gap: 8px; align-items: center; }
+.p0840 .track-label { font: 11px var(--font-num); color: var(--muted); display: grid; }
+.p0840 .rail-track {
+  position: relative; height: 26px; background: var(--soft); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden;
+}
+.p0840 .block {
+  position: absolute; top: 0; bottom: 0; display: grid; place-content: center;
+  font: 10px var(--font-num); color: color-mix(in srgb, var(--surface) 90%, white);
+  border-right: 1px solid color-mix(in srgb, var(--surface) 60%, transparent);
+  overflow: hidden; white-space: nowrap;
+}
+.p0840 .block.started { background: color-mix(in srgb, var(--muted) 70%, var(--accent)); }
+.p0840 .block.urgent { background: var(--danger); }
+.p0840 .block.salvage { background: var(--accent); }
+.p0840 .block.late { outline: 2px dashed var(--danger); outline-offset: -3px; }
+.p0840 .block.idle { background: transparent; border: 1px dashed var(--line); }
+.p0840 .block.idle::after { content: "空闲"; color: var(--muted); }
+.p0840 .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 11px; color: var(--muted); }
+.p0840 .chip::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; }
+.p0840 .chip.started::before { background: var(--muted); }
+.p0840 .chip.urgent::before { background: var(--danger); }
+.p0840 .chip.salvage::before { background: var(--accent); }
+.p0840 .chip.idle::before { border: 1px dashed var(--line); }
+
+.p0840 .deferred { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; max-height: 260px; overflow: auto; }
+.p0840 .deferred li { display: grid; grid-template-columns: 5em 3em 1fr; gap: 6px; border-bottom: 1px dashed var(--line); padding: 5px 0; }
+.p0840 .deferred li small { grid-column: 1 / -1; color: var(--muted); }
+.p0840 .deferred code { color: var(--danger); font-size: 11px; }
+
+@media (max-width: 980px) {
+  .p0840 #panel-jobs, .p0840 #panel-form, .p0840 #panel-plan,
+  .p0840 #panel-deferred, .p0840 #panel-review { grid-column: auto; }
+  .p0840 .grid-form { grid-template-columns: 1fr; }
+  .p0840 .form-actions { grid-column: auto; }
+}
+
+.p0840 .new-shift { border: 1px dashed var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--surface); }
+.p0840 .new-shift summary { cursor: pointer; color: var(--accent); }
+.p0840 .new-shift .grid-form { margin-top: 8px; }
+.p0840 .new-shift textarea { width: 100%; grid-column: span 2; }
+@media (max-width: 980px) { .p0840 .new-shift textarea { grid-column: auto; } }

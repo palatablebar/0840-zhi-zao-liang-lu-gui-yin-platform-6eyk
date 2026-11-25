@@ -31,6 +31,14 @@ class Store:
             );
             ''')
 
+    def list_approved(self):
+        with self.connect() as db:
+            rows = db.execute(
+                "SELECT id, profile, revision, payload FROM runs WHERE status='APPROVED' ORDER BY created_at DESC"
+            ).fetchall()
+        return [{"run_id": row["id"], "profile": row["profile"], "revision": row["revision"],
+                 "payload": json.loads(row["payload"])} for row in rows]
+
     def find_by_request(self, request_key):
         with self.connect() as db:
             row = db.execute("SELECT * FROM runs WHERE request_key=?", (request_key,)).fetchone()

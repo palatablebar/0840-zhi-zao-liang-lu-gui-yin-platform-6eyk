@@ -25,3 +25,9 @@ docker compose config --quiet
 4. 下载证据 JSON，核对来源摘要、指标和签发版本。
 
 业务规则见 `docs/BUSINESS-RULES.md`，字段定义见 `docs/DATA-DICTIONARY.md`。
+
+## 班前返工排程
+
+在批次归因完成后，打开 `/shift` 用已签发的报工批次为返工单排工位：
+补录预计工时、交期和可救件数，按「急单整批优先、余量多救料」生成排程，
+再复核签发并下载班次证据。规则见 `docs/REWORK.md`。

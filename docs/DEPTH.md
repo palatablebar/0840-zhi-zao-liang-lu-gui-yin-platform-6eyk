@@ -36,3 +36,16 @@
 ## 深度边界
 
 采信层区分编码、重复表头、列数、空值、全角字符、前导零与冲突重复；整理层负责单位和字段边界；计算层执行核心规则；判定层保留原因码；对账层要求来源行等于采信、隔离、重复和忽略之和；复核层使用版本号阻止陈旧签发。
+
+## 班前返工排程模块（0840 扩展）
+
+| 模块 | 动作 | 入口 | 核心文件 | 测试 |
+|---|---|---|---|---|
+| M8 班次定义 | 维护工位工时与起止，改动即失效旧排程 | `POST /api/shifts` | `app/rework/service.py` | `tests/test_rework_api.py` |
+| M9 返工补录 | 校验报工签发、数量与实收对账，派生撤销状态 | `POST /api/shifts/{id}/jobs` | `app/rework/service.py` | `tests/test_rework_api.py` |
+| M10 排程 | 已开工锁定、急单整批优先、余量背包多救料 | `POST /api/shifts/{id}/schedule` | `app/rework/schedule.py` | `tests/test_rework_schedule.py` |
+| M11 并发与复核 | 单事务重排、版本号防超占、签发与证据 | `POST /api/shifts/{id}/review` | `app/rework/store.py` | `tests/test_rework_api.py` |
+
+排程深度边界：已开工按真实开工时刻固定占位；未开工实收不符即撤销；急单整批赶得上才优先，
+余量按 0/1 背包最大化救料；同一工位排程总量不可超过可用工时，并发排程靠 `BEGIN IMMEDIATE`
+加 `revision` 串行化，旧版本提交一律 `STALE_SCHEDULE`。

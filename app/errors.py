@@ -18,6 +18,19 @@ MESSAGES = {
     "GATE_BLOCKED": "存在阻断项，不能签发",
     "NOT_APPROVED": "批次尚未签发",
     "BAD_REQUEST": "请求内容不完整",
+    "SHIFT_NOT_FOUND": "班次不存在",
+    "JOB_NOT_FOUND": "返工单不存在",
+    "JOB_EXISTS": "返工单已存在",
+    "STATION_NOT_FOUND": "工位不在本班次",
+    "REPORT_NOT_APPROVED": "报工尚未签发，不能排返工",
+    "STARTED_JOB_INCOMPLETE": "已开工返工单缺少工时或工位",
+    "STARTED_LOCKED": "已开工的返工不能挪动",
+    "STALE_SCHEDULE": "班次排程已被更新，请刷新后重排",
+    "SALVAGE_OVER_REPORT": "可救件数不能超过报工数",
+    "SALVAGE_OVER_RECEIPT": "可救件数不能超过实收数",
+    "BAD_QUANTITY": "数量不合法",
+    "BAD_MINUTES": "预计工时必须为正整数",
+    "BAD_MOMENT": "日期时间格式不正确",
 }
 
 

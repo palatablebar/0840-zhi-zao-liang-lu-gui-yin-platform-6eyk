@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>班前返工排程 · 制造良率归因台</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='shift.css') }}">
+</head>
+<body class="p0840 layout-grid">
+{% import "widgets.html" as ui %}
+<div class="shell">
+  <nav class="rail" aria-label="阶段导航">
+    <a class="brand" href="/" aria-label="工作台首页">良率</a>
+    <p class="rail-label">班前作业</p>
+    <div id="shift-nav">
+      <a href="/" class="nav-link">批次归因</a>
+      <a href="/shift" class="nav-link active">返工排程</a>
+    </div>
+    <p class="rail-note">按已签发报工排返工</p>
+  </nav>
+  <div class="work">
+    <header class="toolbar">
+      <div>
+        <p class="actor">工厂工艺工程师</p>
+        <h1>班前返工排程</h1>
+      </div>
+      <div class="tools">
+        <span class="rule-chip">急单优先 · 余量多救料</span>
+        <label>班次 <select id="shift-select"></select></label>
+        <button id="reload" type="button">刷新</button>
+      </div>
+    </header>
+
+    <main>
+      <details class="new-shift">
+        <summary>新建 / 调整班次</summary>
+        <form id="shift-form" class="grid-form">
+          <label>班次编号<input name="shift_id" required placeholder="S-20261125-A"></label>
+          <label>开始<input name="starts_at" type="datetime-local" required></label>
+          <label>结束<input name="ends_at" type="datetime-local" required></label>
+          <label>工位工时<textarea name="stations" rows="2" placeholder="ST1:返工线1:600, ST2:返工线2:300"></textarea></label>
+          <div class="form-actions"><button type="submit">保存班次</button></div>
+        </form>
+      </details>
+
+      <section class="kpis" aria-label="班次指标">
+        {{ ui.metric("k-capacity", "可用工时(分)") }}
+        {{ ui.metric("k-used", "已排工时(分)") }}
+        {{ ui.metric("k-salvaged", "可救件数") }}
+        {{ ui.metric("k-urgent", "急单准点") }}
+      </section>
+
+      <section class="board">
+        <article class="panel" id="panel-jobs">
+          <div class="panel-head"><h2>返工单</h2><span class="hint" id="jobs-hint">--</span></div>
+          <div class="table-wrap">
+            <table class="shift-table">
+              <thead><tr><th>返工单</th><th>工单</th><th>工位</th><th class="num">预计(min)</th><th>交期</th><th class="num">可救</th><th>状态</th></tr></thead>
+              <tbody id="job-body"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel" id="panel-form">
+          <div class="panel-head"><h2>补录返工单</h2><span class="hint" id="report-hint">报工须已签发</span></div>
+          <form id="job-form" class="grid-form">
+            <label>返工单号<input name="job_id" required placeholder="RW-001"></label>
+            <label>报工批次<select name="report_run_id" id="report-input" required></select></label>
+            <label>工单<input name="work_order" placeholder="WO1"></label>
+            <label>工位<select name="station_id" id="station-input"></select></label>
+            <label>预计工时(分)<input name="expected_minutes" type="number" min="1" step="1" required></label>
+            <label>交期<input name="due_at" type="datetime-local" required></label>
+            <label>可救件数<input name="salvage_qty" type="number" min="0" step="1" required></label>
+            <label>报工数<input name="report_qty" type="number" min="0" step="1"></label>
+            <label>实收数<input name="received_qty" type="number" min="0" step="1"></label>
+            <div class="form-actions">
+              <button type="submit">保存返工单</button>
+              <button type="button" id="schedule">生成排程</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel" id="panel-plan">
+          <div class="panel-head"><h2>本班工位安排</h2><span class="hint" id="plan-hint">未排程</span></div>
+          <div id="gantt" class="gantt"></div>
+          <div class="legend">
+            <span class="chip started">已开工</span>
+            <span class="chip urgent">急单</span>
+            <span class="chip salvage">余量救料</span>
+            <span class="chip idle">空闲</span>
+          </div>
+        </article>
+
+        <article class="panel" id="panel-deferred">
+          <div class="panel-head"><h2>未排与撤销</h2><span class="hint" id="deferred-count">--</span></div>
+          <ul class="deferred" id="deferred-list"></ul>
+        </article>
+
+        <article class="panel" id="panel-review">
+          <div class="panel-head"><h2>班次复核</h2><span class="hint" id="revision">rev 0</span></div>
+          <div class="review">
+            <label for="comment">复核意见</label>
+            <textarea id="comment" placeholder="核对急单准点、余量救料与工位占用"></textarea>
+            <div class="review-actions">
+              <button id="approve" type="button" disabled>签发本班</button>
+              <button id="hold" type="button" disabled>暂缓</button>
+              <a id="download" href="#" download hidden>下载班次证据</a>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="statusbar">
+      <span id="notice" class="notice"></span>
+      <span id="shift-status">未选择班次</span>
+      <span>0840 · 返工排程</span>
+    </footer>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='shift.js') }}"></script>
+</body>
+</html>
